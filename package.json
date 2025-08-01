@@ -1,0 +1,24 @@
+{
+  "name": "fsq",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "bin": {
+    "fsq": "./dist/index.js"
+  },
+  "license": "MIT",
+  "type": "commonjs",
+  "scripts": {
+    "watch": "tsc --watch",
+    "dev": "concurrently \"tsc --watch\" \"node --watch dist/index.js\""
+  },
+  "dependencies": {
+    "chalk": "^5.4.1",
+    "cheerio": "^1.1.2",
+    "commander": "^14.0.0",
+    "firebase-admin": "^13.4.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.1.0",
+    "concurrently": "^9.2.0"
+  }
+}

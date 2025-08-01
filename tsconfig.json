@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",                          // Modern JS for Node.js
+    "module": "CommonJS",                        // Required for Node.js CLI
+    "rootDir": "./src",                          // Your source code
+    "outDir": "./dist",                          // Compiled output
+    "esModuleInterop": true,                     // Allow `import fs from 'fs'`
+    "forceConsistentCasingInFileNames": true,    // Catch casing mismatches
+    "strict": true,                              // Enable all strict type checks
+    "skipLibCheck": true,                        // Speed up build
+    "moduleResolution": "node",                  // Resolve Node-style modules
+    "resolveJsonModule": true,                   // Allow importing `.json` files
+    "declaration": true,                         // Optional: emit `.d.ts` files
+    "sourceMap": true                            // Optional: helpful for debugging
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"],
+  "preserveShebang": true
+}
