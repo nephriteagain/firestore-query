@@ -3,8 +3,10 @@ import admin from "firebase-admin";
 import chalk from "chalk";
 import { pathResolver } from "./utils/pathResolver";
 import { addSaveToFileOption, saveFile } from "./utils/addSaveToFileOption";
-import { db } from "./constants";
+import { db, WHERE_FILTERS } from "./constants";
 import { formatFirebaseDocument } from "./utils/formatFirebaseDocument";
+import { getWhereOperation } from "./utils/getWhereOperation";
+import { filterDocumentFields } from "./utils/filterDocumentFields";
 
 const log = (text: any) => {
   console.log(text);
@@ -32,6 +34,10 @@ program
     "The order of the documents\nDefault: ascending\nExamples:\n  -o first_name\n  -o first_name=desc"
   )
   .option(
+    "-w --where <where...>",
+    "firestore 'where' filter"
+  )
+  .option(
     "-c --collection-group",
     "collection group name"
   )
@@ -57,32 +63,77 @@ program
       console.log(chalk.cyan(`Fetching documents from collection: ${chalk.blueBright(path)}`));
         ref = admin.firestore().collection(path);
       }
+      
+      // limit
       let q = ref.limit(parseInt(options.limit));
+      console.log(
+        chalk.gray("limit"),
+        chalk.blueBright(options.limit)
+      )
+      // 
 
+
+      // where
+      if (options.where && options.where.length > 0) {
+        const whereOptions = options.where as string[];
+        for (const whereOption of whereOptions) {
+          const operation = getWhereOperation(whereOption)
+          if (!operation) {
+            program.error(
+              chalk.red(`Where operation not found\n
+  valid operations:
+  ${WHERE_FILTERS.join(", ")}\n
+  EXAMPLE:
+  firebaseq get users --where email==test@gmail.com
+                `)
+            )
+            return;
+          }
+          // currently only supports string values;
+          const [ field, value ] = whereOption.split(operation)
+          q = q.where(field, operation, value)
+          console.log(
+            chalk.gray("where"),
+            chalk.green(field),
+            chalk.redBright(operation),
+            chalk.whiteBright(value)
+          )
+        }
+      }
+      //
+
+
+      // order by
       if (options.orderBy) {
         let [field, direction] = options.orderBy.split("=");
         direction = direction || "asc";
         q = q.orderBy(field, direction as "asc" | "desc");
         console.log(chalk.cyan(`Ordered by: ${chalk.yellow(field)} (${direction})`));
       }
+      //
 
       const snap = await q.get();
       const docs = snap.docs.map((d) => ({ data: d.data(), id: d.id }));
 
+      // filter fields
       if (options.fields) {
+        if (!Array.isArray(options.fields)) {
+          program.error(
+            chalk.red("option.field is not an array.")
+          )
+          return;
+        }
         const fields = options.fields as string[];
         for (const doc of docs) {
-          for (const key in doc.data) {
-            if (!fields.includes(key)) {
-              delete doc.data[key];
-            }
-          }
+          filterDocumentFields(doc.data, fields)
         }
-        console.log(chalk.cyan(`Selected fields: ${chalk.yellow(fields.join(", "))}`));
       }
+      //
 
+      // show as JSON
       if (options.json) {
         log(docs);
+      //
       } else {
         for (const doc of docs) {
           formatFirebaseDocument(doc.data, doc.id)
@@ -93,11 +144,13 @@ program
       return;
     }
 
+    // collection grouo
     if (options.collectionGroup) {
       program.error(
         chalk.red("Invalid collection group flag while querying a document.")
       )
     }
+    //
 
     console.log(chalk.cyan(`Fetching document: ${chalk.blueBright(path)}`));
 
@@ -107,16 +160,17 @@ program
 
     if (!document) {
       program.error(chalk.red("Document not found."));
+      return;
     }
 
     if (options.fields) {
-      const fields = options.fields as string[];
-      for (const field in document) {
-        if (!fields.includes(field)) {
-          delete document[field];
-        }
+      if (!Array.isArray(options.fields)) {
+        program.error(
+          chalk.red("option.field is not an array.")
+        )
+        return;
       }
-      console.log(chalk.cyan(`Selected fields: ${chalk.yellow(fields.join(", "))}`));
+      filterDocumentFields(document, options.fields)
     }
     if (options.json) {
       log(document)
@@ -124,7 +178,7 @@ program
       formatFirebaseDocument(document)
 
     }
-    console.log(chalk.green(`\nDOCUMENT FETCHED FROM ${path}\n`));
+    console.log(chalk.green(`\nDOCUMENT FETCHED FROM ${path} \n`));
   })
   .addHelpText(
     "after",
