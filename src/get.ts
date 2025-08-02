@@ -72,8 +72,15 @@ program
       )
       // 
 
-
-      // where
+      /**
+       * where
+       * 
+       * @example
+       * firestoreq get users --where email=test@gmail.com
+       * 
+       * // multi query sample
+       * firestoreq get users --where first_name=john last_name=pork
+       */
       if (options.where && options.where.length > 0) {
         const whereOptions = options.where as string[];
         for (const whereOption of whereOptions) {
@@ -103,7 +110,12 @@ program
       //
 
 
-      // order by
+      /**
+      * @description Order the results by a field. 
+      * @example
+      * firestoreq get users --o date=desc
+      * firestoreq get users --o name
+      */
       if (options.orderBy) {
         let [field, direction] = options.orderBy.split("=");
         direction = direction || "asc";
