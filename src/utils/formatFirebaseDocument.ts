@@ -10,7 +10,7 @@ export function formatFirebaseDocument(document: DocumentData|undefined, id?: st
         console.log("  ",chalk.bold("Document id: "),chalk.underline(id))
     }
     // for empty documents
-    if (Object.keys(document.length === 0)) {
+    if (Object.keys(document).length === 0) {
         console.log(
             "    ",
             chalk.red("Empty document\n")
