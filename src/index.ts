@@ -15,7 +15,8 @@ import "./list"
 
 
 program
-  .name('fsq')
+  .name('firestoreq')
+  .alias("fsq")
   .description('Query your firestore database')
   .version('0.0.1');
 

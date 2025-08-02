@@ -1,9 +1,9 @@
 {
-  "name": "fsq",
-  "version": "1.0.0",
+  "name": "firestoreq",
+  "version": "0.0.1",
   "main": "dist/index.js",
   "bin": {
-    "fsq": "./dist/index.js"
+    "firestoreq": "./dist/index.js"
   },
   "license": "MIT",
   "type": "commonjs",

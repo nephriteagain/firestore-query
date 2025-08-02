@@ -1,56 +1,86 @@
 import program from "./program";
 import { db } from "./constants";
 import { pathResolver } from "./utils/pathResolver";
+import { addSaveToFileOption, saveFile } from "./utils/addSaveToFileOption";
+import chalk from "chalk";
+
+const logs: string[] = [];
+const log = (text: string) => {
+  console.log(text);
+  logs.push(text);
+};
 
 program
-    .command("list")
-    .description("list firestore collection")
-    .argument("[path]", "optional document path for nested collection")
-    .option("-s --save <path>", "save result to file", "list.txt")
-    .action(async (path, options) => {
-        path = pathResolver(path)
-        console.log(`listing path of ${path ? path : "root"}`)
-        if (path) {
-            const pathLength = (path as string).split("/").length
-            let docRef
-            // checks if the path is a collection
-            if (pathLength % 2 !== 0) {
-                console.log("collection path detected, will list the nested collection of the first document it encountered\n")
-                const colSnaps = await db.collection(path).limit(1).get()
-                const firstDoc = colSnaps.docs[0].id
-                if (!firstDoc) {
-                    throw new Error(`collection ${path} has  no valid document.`)
-                }
-                // reference the first document in the collection
-                docRef = db.collection(path).doc(firstDoc)
-                console.log(`listing collection of ${docRef.path}...`)
-            } else {
-                // valid document path reference it immediately
-                docRef = db.doc(path)
-            }
-            const collections = await docRef.listCollections()
-            const collectionName = collections.map(c => c.path)
-            console.log("\n")
-            console.log(`${docRef.path} sub collections\n`)
-            if (collections.length === 0) {
-                console.log("collection is empty.")
-            }
-            for (const c of collectionName) {
-                const collectionName = c.split("/").slice(-1)[0]
-                console.log(`   ${collectionName}`)
-            }
-            console.log("\n")
-            return;
+  .command("list")
+  .description("list firestore collection")
+  .argument("[path]", "optional document path for nested collection")
+  .addOption(addSaveToFileOption())
+  .hook("postAction", (thisCommand, actionCommand) => {
+    saveFile(thisCommand.opts(), logs);
+  })
+  .action(async (path, options) => {
+    path = pathResolver(path);
+    log(chalk.gray(`📁 Listing path: ${path || "root"}`));
+
+    if (path) {
+      const pathLength = (path as string).split("/").length;
+      let docRef;
+
+      // collection path
+      if (pathLength % 2 !== 0) {
+        console.log(
+          chalk.cyan("ℹ️  Collection path detected. Will list the nested collections of the first document found.\n")
+        );
+        const colSnaps = await db.collection(path).limit(1).get();
+        const firstDoc = colSnaps.docs[0]?.id;
+
+        if (!firstDoc) {
+          throw new Error(chalk.red(`❌ Collection '${path}' has no valid documents.`));
         }
-        const collections = await db.listCollections()
-        const collectionName = collections.map(c => c.path)
-        console.log("\n")
-        console.log("Root collections\n")
-        if (collections.length === 0) {
-            console.log("collection is empty.")
+
+        docRef = db.collection(path).doc(firstDoc);
+        console.log(chalk.blueBright(`🔍 Listing collections under: ${docRef.path}\n`));
+      } else {
+        docRef = db.doc(path);
+      }
+
+      const collections = await docRef.listCollections();
+      const collectionNames = collections.map((c) => c.id);
+
+      console.log(chalk.blueBright(`📚 Subcollections of ${docRef.path}\n`));
+      if (collections.length === 0) {
+        log(chalk.magenta("⚠️  No subcollections found."));
+      } else {
+        for (const name of collectionNames) {
+          log(chalk.green(`   • ${name}`));
         }
-        for (const c of collectionName) {
-            console.log(`   ${c}`)
+      }
+    } else {
+      const collections = await db.listCollections();
+      const collectionNames = collections.map((c) => c.id);
+
+      console.log(chalk.blueBright("📚 Root Collections\n"));
+      if (collections.length === 0) {
+        log(chalk.magenta("⚠️  No collections found at root level."));
+      } else {
+        for (const name of collectionNames) {
+          log(chalk.green(`   • ${name}`));
         }
-        console.log("\n")
-    })
+      }
+    }
+  })
+  .addHelpText(
+    "after",
+    `
+Examples:
+
+  $ fsq list
+    - Lists all root collections.
+
+  $ fsq list users/abc123
+    - Lists subcollections inside the document 'users/abc123'.
+
+  $ fsq list users -s output.txt
+    - Lists subcollections of the first document in 'users' and saves it to output.txt.
+`
+  );
