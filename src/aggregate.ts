@@ -4,19 +4,40 @@ import chalk from "chalk";
 import { pathResolver } from "./utils/pathResolver";
 import { addSaveToFileOption, saveFile } from "./utils/addSaveToFileOption";
 import { handleCollectionGroupOption, handleCollectionOption, handleLimitOption, handleOrderByOption, handleSelectFieldsCol, handleSelectFieldsDoc, handleWhereOption } from "./utils";
+import admin from "firebase-admin"
+
 
 const log = (text: any) => {
   logs.push(JSON.stringify(text, null, 4));
 };
 const logs: string[] = [];
 
+const sum = admin.firestore.AggregateField.sum
+const average = admin.firestore.AggregateField.average
+const count =  admin.firestore.AggregateField.count
+
 program
-  .command("count")
-  .description("count  collection or collection group")
+  .command("aggregate")
+  .description("aggregate count, sum, and average collection or collection group")
   .argument(
     "<path>", 
     "collection/collection group name"
   )
+  // aggregation options
+  .option(
+    "--count",
+    "count of field"
+  )
+  .option(
+    "--sum <field>",
+    "sum of field"
+  )
+  .option(
+    "--average <field>",
+    "average of field"
+  )
+  //---------------------/
+  
   .option(
     "-l --limit [limit]", 
     "maximum document to parse",
@@ -49,6 +70,17 @@ program
       )
       return;
     }
+    
+    if (!options.count && !options.sum && !options.average) {
+      program.error(`
+        ${chalk.red("select atleast 1 aggregation options")}
+        ${chalk.yellow(`--count`)}
+        ${chalk.yellow(`--sum <field>`)}
+        ${chalk.yellow(`--average <field>`)}
+      `)
+      return;
+    }
+
 
     let ref;
     if (options.collectionGroup) {
@@ -71,19 +103,59 @@ program
       q = handleWhereOption({ctx: program, options, query: q})
     }
 
-    const snap = await q.count().get();
-    const count = snap.data()
+    const aggregationOption :  {
+      count?: admin.firestore.AggregateField<number>;
+      sum?: admin.firestore.AggregateField<number>;
+      average?: admin.firestore.AggregateField<number | null>;
+  } = {
+      "count": count(),
+      "sum": sum(options.sum),
+      "average": average(options.average)
+    }
 
+    if (!options.count) {
+      delete aggregationOption.count
+    }
+    if (!options.sum) {
+      delete aggregationOption.sum
+    }
+    if (!options.average) {
+      delete aggregationOption.average
+    }
+
+    const snap = await q.aggregate(aggregationOption).get()
+
+  
     // --json
     if (options.json) {
-      console.log(JSON.stringify(count, null, 4))
+      console.log(snap.data())
     } else {
-      console.log(
-        chalk.cyan("total count: "),
-        chalk.bold(chalk.blueBright(
-          count.count
-        ))
-      )
+      if (options.sum) {
+        console.log(
+          chalk.cyan(`field ${options.sum} sum: `),
+          chalk.bold(chalk.blueBright(
+            snap.data().sum
+          ))
+        )
+      }
+      if (options.average) {
+        console.log(
+          chalk.greenBright(`field ${options.average} average: `),
+          chalk.bold(chalk.blueBright(
+            snap.data().average
+          ))
+        )
+      }
+      if (options.count) {
+        console.log(
+          chalk.yellowBright(`total count: `),
+          chalk.bold(chalk.blueBright(
+            snap.data().count
+          ))
+        )
+      }
+      
+      
     }
     // save to logs
     log(snap.data())
