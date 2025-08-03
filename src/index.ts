@@ -12,6 +12,7 @@ admin.initializeApp({ credential: admin.credential.cert(serviceAcct)})
 // NOTE: must initialize first before importing this
 import "./get"
 import "./list"
+import "./count"
 
 
 program

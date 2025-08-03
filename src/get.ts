@@ -37,12 +37,8 @@ program
     "firestore 'where' filter",
   )
   .option(
-    "-t --where-type [types...]" ,
-    "specify firestore 'where' filter type"
-  )
-  .option(
     "-c --collection-group",
-    "collection group name"
+    "the path is a collection group"
   )
   .option(
     "-j --json",
