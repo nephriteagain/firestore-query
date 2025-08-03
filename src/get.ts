@@ -1,13 +1,11 @@
 import program from "./program";
-import admin from "firebase-admin";
+import { db } from "./constants";
 import chalk from "chalk";
 import { pathResolver } from "./utils/pathResolver";
 import { addSaveToFileOption, saveFile } from "./utils/addSaveToFileOption";
-import { db, WHERE_FILTERS } from "./constants";
 import { formatFirebaseDocument } from "./utils/formatFirebaseDocument";
-import {  isValidOperation } from "./utils/getWhereOperation";
 import { filterDocumentFields } from "./utils/filterDocumentFields";
-import { WhereFilterOp } from "./types";
+import { handleCollectionGroupOption, handleCollectionOption, handleLimitOption, handleOrderByOption, handleSelectFieldsCol, handleSelectFieldsDoc, handleWhereOption } from "./utils";
 
 const log = (text: any) => {
   console.log(text);
@@ -62,19 +60,13 @@ program
     if (isCollection) {
       let ref;
       if (options.collectionGroup) {
-        console.log(chalk.cyan(`Fetching documents from collection group: ${chalk.blueBright(path)}`));
-        ref = db.collectionGroup(path)
+        ref = handleCollectionGroupOption(path)
       } else {
-      console.log(chalk.cyan(`Fetching documents from collection: ${chalk.blueBright(path)}`));
-        ref = admin.firestore().collection(path);
+        ref = handleCollectionOption(path)
       }
       
       // limit
-      let q = ref.limit(parseInt(options.limit));
-      console.log(
-        chalk.gray("limit"),
-        chalk.blueBright(options.limit)
-      )
+      let q = handleLimitOption(ref, parseInt(options.limit))
       // 
 
       /**
@@ -87,64 +79,7 @@ program
        * firestoreq get users --where first_name=john last_name=pork
        */
       if (options.where && options.where.length > 0) {
-        const whereOptions = options.where as string[];
-        for (const whereOption of whereOptions) {
-          const [field, operation, value, type = "string"] = whereOption.split(",")
-          if (!operation) {
-            program.error(
-              chalk.red(`Where operation not found\n
-  valid operations:
-  ${WHERE_FILTERS.join(", ")}\n
-  EXAMPLE:
-  firebaseq get users --where email,==,test@gmail.com
-                `)
-            )
-            return;
-          }
-          const validOperation = isValidOperation(operation)
-          if (!validOperation) {
-            program.error(
-              chalk.red(
-                `Invalid operation: ${operation}\n
-  valid operations:
-  ${WHERE_FILTERS.join(", ")}\n
-  EXAMPLE:
-  firebaseq get users --where email,==,test@gmail.com
-                `
-              )
-            )
-          }
-          let parsedValue : any = value;
-          if (type === "string") {
-            parsedValue = value.toString();
-          }
-          if (type === "int" || type === "number") {
-            parsedValue = parseInt(value)
-          }
-          if (type === "float") {
-            parsedValue = parseFloat(value)
-          }
-          if (type == "bool" || type === "boolean") {
-            parsedValue = Boolean(value)
-          }
-          if (type === "null") {
-            parsedValue = null;
-          }
-          if (type === "date") {
-            parsedValue = new Date(value)
-          }
-          // todo store geopoint in firebase
-          
-
-          q = q.where(field, operation as WhereFilterOp, parsedValue)
-          console.log(
-            chalk.gray("where"),
-            chalk.green(field),
-            chalk.redBright(operation),
-            chalk.whiteBright(value),
-            chalk.cyan(`type: ${type}`)
-          )
-        }
+        q = handleWhereOption({ctx: program, options, query: q})
       }
       //
 
@@ -156,30 +91,18 @@ program
       * firestoreq get users --o name
       */
       if (options.orderBy) {
-        let [field, direction] = options.orderBy.split(",");
-        direction = direction || "asc";
-        q = q.orderBy(field, direction as "asc" | "desc");
-        console.log(chalk.cyan(`Ordered by: ${chalk.yellow(field)} (${direction})`));
+        q =  handleOrderByOption(q, options)
       }
-      //
-
-      const snap = await q.get();
-      const docs = snap.docs.map((d) => ({ data: d.data(), id: d.id }));
-
+      
       // filter fields
       if (options.fields) {
-        if (!Array.isArray(options.fields)) {
-          program.error(
-            chalk.red("option.field is not an array.")
-          )
-          return;
-        }
-        const fields = options.fields as string[];
-        for (const doc of docs) {
-          filterDocumentFields(doc.data, fields)
-        }
+        q = handleSelectFieldsCol({ctx: program, query: q, options})
       }
-      //
+
+      const snap = await q.get();
+      const docs = snap.docs.map((
+        d: FirebaseFirestore.QueryDocumentSnapshot<FirebaseFirestore.DocumentData, FirebaseFirestore.DocumentData>
+      ) => ({ data: d.data(), id: d.id }));
 
       // show as JSON
       if (options.json) {
@@ -205,7 +128,7 @@ program
 
     console.log(chalk.cyan(`Fetching document: ${chalk.blueBright(path)}`));
 
-    const ref = admin.firestore().doc(path);
+    const ref = db.doc(path);
     const snap = await ref.get();
     const document = snap.data();
 
@@ -215,13 +138,7 @@ program
     }
 
     if (options.fields) {
-      if (!Array.isArray(options.fields)) {
-        program.error(
-          chalk.red("option.field is not an array.")
-        )
-        return;
-      }
-      filterDocumentFields(document, options.fields)
+      handleSelectFieldsDoc({ctx: program, document, options})
     }
     if (options.json) {
       log(document)
