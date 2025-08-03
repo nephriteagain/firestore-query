@@ -1,10 +1,14 @@
 import { WHERE_FILTERS } from "../constants"
 
-export function getWhereOperation(whereOption: string) {
+export function getWhereOperation(operation: string) {
     for (const filter of WHERE_FILTERS) {
-        const result = whereOption.includes(filter)
+        const result = operation.includes(filter)
         if (result) {
             return filter
         }
     }
+}
+
+export function isValidOperation(operation: string) {
+    return WHERE_FILTERS.some(f => f === operation)
 }
