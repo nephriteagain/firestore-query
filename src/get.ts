@@ -4,8 +4,15 @@ import chalk from "chalk";
 import { pathResolver } from "./utils/pathResolver";
 import { addSaveToFileOption, saveFile } from "./utils/addSaveToFileOption";
 import { formatFirebaseDocument } from "./utils/formatFirebaseDocument";
-import { filterDocumentFields } from "./utils/filterDocumentFields";
-import { handleCollectionGroupOption, handleCollectionOption, handleLimitOption, handleOrderByOption, handleSelectFieldsCol, handleSelectFieldsDoc, handleWhereOption } from "./utils";
+import { 
+  handleCollectionGroupOption, 
+  handleCollectionOption, 
+  handleLimitOption, 
+  handleOrderByOption, 
+  handleSelectFieldsCol, 
+  handleSelectFieldsDoc, 
+  handleWhereOption
+} from "./utils";
 
 const log = (text: any) => {
   console.log(text);
