@@ -30,7 +30,8 @@ export function handleWhereOption({ctx, options, query}:{
     const whereOptions = options.where as string[];
     let whereQuery = query;
         for (const whereOption of whereOptions) {
-          const [field, operation, value, type = "string"] = whereOption.split(",")
+          const [field, operation, value, rawType] = whereOption.split(",")
+          const type = rawType || "string";
           if (!operation) {
             ctx.error(
               chalk.red(`Where operation not found\n

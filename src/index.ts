@@ -13,6 +13,7 @@ admin.initializeApp({ credential: admin.credential.cert(serviceAcct)})
 import "./get"
 import "./list"
 import "./aggregate"
+import "./update"
 
 
 program
