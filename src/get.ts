@@ -1,5 +1,4 @@
 import program from "./program";
-import { db } from "./constants";
 import chalk from "chalk";
 import { pathResolver } from "./utils/pathResolver";
 import { addSaveToFileOption, saveFile } from "./utils/addSaveToFileOption";
@@ -13,6 +12,8 @@ import {
   handleSelectFieldsDoc, 
   handleWhereOption
 } from "./utils";
+import { bootstrapFirebase } from "./utils/config";
+import { firestore } from "firebase-admin";
 
 const log = (text: any) => {
   console.log(text);
@@ -52,6 +53,9 @@ program
     "output as json"
   )
   .addOption(addSaveToFileOption())
+  .hook("preAction", () => {
+    bootstrapFirebase()
+  })
   .hook("postAction", (thisCommand, actionCommand) => {
     saveFile(thisCommand.opts(), logs);
   })
@@ -59,7 +63,7 @@ program
     path = pathResolver(path);
     const docArr = path.split("/");
     const isCollection = docArr.length % 2 !== 0;
-
+    const db = firestore()
     if (isCollection) {
       let ref;
       if (options.collectionGroup) {

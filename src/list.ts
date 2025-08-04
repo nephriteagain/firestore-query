@@ -1,8 +1,9 @@
 import program from "./program";
-import { db } from "./constants";
 import { pathResolver } from "./utils/pathResolver";
 import { addSaveToFileOption, saveFile } from "./utils/addSaveToFileOption";
 import chalk from "chalk";
+import { bootstrapFirebase } from "./utils/config";
+import { firestore } from "firebase-admin";
 
 const logs: string[] = [];
 const log = (text: string) => {
@@ -15,13 +16,16 @@ program
   .description("list firestore collection")
   .argument("[path]", "optional document path for nested collection")
   .addOption(addSaveToFileOption())
+  .hook("preAction", () => {
+    bootstrapFirebase()
+  })
   .hook("postAction", (thisCommand, actionCommand) => {
     saveFile(thisCommand.opts(), logs);
   })
   .action(async (path, options) => {
     path = pathResolver(path);
     log(chalk.gray(`📁 Listing path: ${path || "root"}`));
-
+    const db = firestore()
     if (path) {
       const pathLength = (path as string).split("/").length;
       let docRef;

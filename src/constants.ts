@@ -1,7 +1,4 @@
-import admin from "firebase-admin"
 import { type WhereFilterOp } from "./types";
-
-export const db = admin.firestore();
 
 /**
  * NOTE: MUST BE ARRANGE LIKE THIS SPECIFICALLY

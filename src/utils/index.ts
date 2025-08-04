@@ -1,18 +1,20 @@
 import { Command } from "commander";
-import { db } from "../constants"
 import chalk from "chalk";
 import { WHERE_FILTERS } from "../constants";
 import { isValidOperation } from "./getWhereOperation";
 import { WhereFilterOp } from "../types";
 import { filterDocumentFields } from "./filterDocumentFields";
+import { firestore } from "firebase-admin";
 
 export function handleCollectionGroupOption(path: string) : FirebaseFirestore.CollectionGroup {
     console.log(chalk.cyan(`Fetching documents from collection group: ${chalk.blueBright(path)}`));
+    const db = firestore()
     return db.collectionGroup(path)
 }
 
 export function handleCollectionOption(path: string) : FirebaseFirestore.CollectionReference {
     console.log(chalk.cyan(`Fetching documents from collection: ${chalk.blueBright(path)}`));
+    const db = firestore()
     return db.collection(path);
 }
 

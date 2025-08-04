@@ -1,12 +1,16 @@
 import chalk from "chalk";
 import program from "./program";
 import { pathResolver } from "./utils/pathResolver";
-import { db } from "./constants";
+import { bootstrapFirebase } from "./utils/config";
+import { firestore } from "firebase-admin";
 
 program
     .command("update")
     .description("update a firestore document")
     .argument("path", "document path")
+    .hook("preAction", () => {
+        bootstrapFirebase()
+    })
     .option("-f --fields <fields...>", "fields to update in format 'field,value,type' (type is optional and will default to string is missing)")
     .action(async (path, options) => {
         path = pathResolver(path);
@@ -18,7 +22,7 @@ program
             )
             return
         }
-        const ref = db.doc(path)
+        const ref = firestore().doc(path)
         const fields = options.fields
        if (!fields || !Array.isArray(fields) || fields.length === 0) {
         program.error(
