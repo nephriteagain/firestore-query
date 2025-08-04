@@ -1,10 +1,10 @@
 import program from "./program";
-import { db } from "./constants";
 import chalk from "chalk";
 import { pathResolver } from "./utils/pathResolver";
 import { addSaveToFileOption, saveFile } from "./utils/addSaveToFileOption";
 import { handleCollectionGroupOption, handleCollectionOption, handleLimitOption, handleOrderByOption, handleSelectFieldsCol, handleSelectFieldsDoc, handleWhereOption } from "./utils";
 import admin from "firebase-admin"
+import { bootstrapFirebase } from "./utils/config";
 
 
 const log = (text: any) => {
@@ -55,6 +55,9 @@ program
     "output as json"
   )
   .addOption(addSaveToFileOption())
+  .hook("preAction", () => {
+    bootstrapFirebase()
+  })
   .hook("postAction", (thisCommand, actionCommand) => {
     saveFile(thisCommand.opts(), logs);
   })
