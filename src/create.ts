@@ -16,14 +16,22 @@ program
     .action(async (path, options) => {
         path = pathResolver(path);
         const docArr = path.split("/");
+
+        let ref : FirebaseFirestore.DocumentReference;
+        
         const isCollection = docArr.length % 2 !== 0;
         if (isCollection) {
-            program.error(
-                chalk.red("invalid document path")
+            // if only collection reference is submitted, we create the id
+            ref = firestore().collection(path).doc()
+            console.log(
+                chalk.greenBright(`Collection path detected, creating document ${ref.path}`)
             )
-            return
+        } else {
+            ref = firestore().doc(path)
+            console.log(
+                chalk.greenBright(`Document path detected creating document ${ref.id}`)
+            )
         }
-        const ref = firestore().doc(path)
         const fields = options.fields
        if (!fields || !Array.isArray(fields) || fields.length === 0) {
         program.error(
@@ -95,7 +103,7 @@ program
         )
       }
       console.log(
-        chalk.gray(`Creating ${path}...`)
+        chalk.gray(`Creating document...`)
       )
       await ref.create(data)
       console.log(
