@@ -9,6 +9,7 @@ import "./list"
 import "./aggregate"
 import "./update"
 import "./link"
+import "./create"
 
 
 program

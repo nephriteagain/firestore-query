@@ -6,13 +6,13 @@ import { firestore } from "firebase-admin";
 import { FIELD_TYPES } from "./constants";
 
 program
-    .command("update")
-    .description("update a firestore document")
+    .command("create")
+    .description("create a firestore document")
     .argument("path", "document path")
     .hook("preAction", () => {
         bootstrapFirebase()
     })
-    .option("-f --fields <fields...>", "fields to update in format 'field,value,type' (type is optional and will default to string is missing)")
+    .option("-f --fields <fields...>", "fields to create in format 'field,value,type' (type is optional and will default to string is missing)")
     .action(async (path, options) => {
         path = pathResolver(path);
         const docArr = path.split("/");
@@ -27,11 +27,11 @@ program
         const fields = options.fields
        if (!fields || !Array.isArray(fields) || fields.length === 0) {
         program.error(
-            chalk.red("no fields to update")
+            chalk.red("no fields to create")
         )
         return;
        }
-       const updates : Record<string,any> = {};
+       const data : Record<string,any> = {};
        for (const f of fields) {
             const [field, value, rawType] = f.split(",")
             const type = rawType || "string";
@@ -74,30 +74,30 @@ program
                     // user can use "now" to specify date right now
                     parsedValue = firestore.Timestamp.now()
                 } else {
-                    parsedValue(new Date(value))
+                    parsedValue = new Date(value)
                 }
             }
-            updates[field] = parsedValue
+            data[field] = parsedValue
           // todo geoPoint
           // todo serverTimestamp
           // todo arrayUnion, arrayRemove
         
        }
        console.log(
-        chalk.yellow("Fields to update:")
+        chalk.yellow("Fields to create:")
       )
-      for (const u in updates) {
+      for (const d in data) {
         console.log(
             "   ",
-            chalk.greenBright(u),
+            chalk.greenBright(d),
             chalk.blueBright(" -> "),
-            chalk.redBright(updates[u])
+            chalk.redBright(data[d])
         )
       }
       console.log(
-        chalk.gray(`Updating ${path}...`)
+        chalk.gray(`Creating ${path}...`)
       )
-      await ref.update(updates)
+      await ref.create(data)
       console.log(
         chalk.bgGreen("SUCCESS")
       )
