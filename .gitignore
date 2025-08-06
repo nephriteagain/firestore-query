@@ -2,3 +2,4 @@ node_modules/
 secret.json
 guide/
 dist/
+.DS_Store

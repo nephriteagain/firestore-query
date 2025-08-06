@@ -1,6 +1,6 @@
 {
   "name": "@nephriteagain/firestore-query",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "A CLI tool for querying and managing Firestore collections",
   "main": "dist/index.js",
   "bin": {

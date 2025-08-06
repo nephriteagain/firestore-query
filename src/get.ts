@@ -80,10 +80,10 @@ program
        * where
        * 
        * @example
-       * fsq get users --where email=test@gmail.com
+       * fsq get users --where email,==,test@gmail.com
        * 
        * // multi query sample
-       * fsq get users --where first_name=john last_name=pork
+       * fsq get users --where first_name,==,john last_name,==,pork
        */
       if (options.where && options.where.length > 0) {
         q = handleWhereOption({ctx: program, options, query: q})

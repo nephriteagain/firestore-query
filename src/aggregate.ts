@@ -181,7 +181,7 @@ Examples:
   $ fsq aggregate users --average age
 
   # Count and sum with filters
-  $ fsq aggregate users --count --sum score -w status=active
+  $ fsq aggregate users --count --sum score -w status,==,active
 
   # Aggregate collection group with limit
   $ fsq aggregate posts --count -c -l 100

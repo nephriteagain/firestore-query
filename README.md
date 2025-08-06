@@ -95,7 +95,7 @@ fsq get users -l 10 -f name email age
 fsq get users -l 5 -o created_at=desc
 
 # Filter users by status
-fsq get users -w status=active age>18
+fsq get users -w status,==,active age,>,18,int
 
 # Query collection group
 fsq get posts -c -l 100
@@ -176,7 +176,7 @@ fsq aggregate users --count
 fsq aggregate games --sum score
 
 # Get average age of active users
-fsq aggregate users --average age -w status=active
+fsq aggregate users --average age -w status,==,active
 
 # Multiple aggregations
 fsq aggregate orders --count --sum total --average total
@@ -211,20 +211,28 @@ fsq create posts -f created_at,"2024-01-15",date
 
 ## Where Clause Syntax
 
-Filter documents using Firestore's where operators:
+Filter documents using Firestore's where operators with comma-separated format: `field,operation,value,type`
+
+**Supported Operations:** `==`, `!=`, `<`, `<=`, `>`, `>=`, `array-contains`, `array-contains-any`, `in`, `not-in`
 
 ```bash
 # Equality
-fsq get users -w status=active
+fsq get users -w status,==,active
 
 # Comparison operators
-fsq get users -w age>18 score<=100
+fsq get users -w age,>,18,int score,<=,100,int
 
 # Multiple conditions
-fsq get users -w status=active age>18 premium=true
+fsq get users -w status,==,active age,>,18,int premium,==,true,bool
 
-# String comparison
-fsq get users -w name>=A name<B
+# String comparison  
+fsq get users -w name,>=,A name,<,B
+
+# Array operations
+fsq get users -w tags,array-contains,premium
+
+# With different data types
+fsq get users -w created_at,>,2024-01-01,date price,<=,99.99,float
 ```
 
 ## File Output
