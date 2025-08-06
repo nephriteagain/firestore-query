@@ -171,19 +171,22 @@ program
     chalk.gray(`
 Examples:
 
-  # Get a single document
-  $ fsq get users/abc123
+  # Count documents in 'users' collection
+  $ firestoreq aggregate users --count
 
-  # Get 10 documents from 'users' collection
-  $ fsq get users -l 10
+  # Sum all 'score' field values in 'games' collection
+  $ firestoreq aggregate games --sum score
 
-  # Get 5 users ordered by 'created_at' descending
-  $ fsq get users -l 5 -o created_at=desc
+  # Get average 'age' of users
+  $ firestoreq aggregate users --average age
 
-  # Get only the 'name' and 'email' fields from a document
-  $ fsq get users/abc123 -f name email
+  # Count and sum with filters
+  $ firestoreq aggregate users --count --sum score -w status=active
 
-  # Save the result to a file
-  $ fsq get users -s output.json
+  # Aggregate collection group with limit
+  $ firestoreq aggregate posts --count -c -l 100
+
+  # Save aggregation results to file
+  $ firestoreq aggregate users --count --average age -s results.json
 `)
   );

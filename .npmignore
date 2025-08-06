@@ -1,0 +1,62 @@
+# Source files
+src/
+
+# Config and development files
+tsconfig.json
+*.tsbuildinfo
+.env
+.env.*
+secret.json
+guide/
+
+# Dependencies and lock files
+node_modules/
+yarn.lock
+package-lock.json
+pnpm-lock.yaml
+
+# Version control
+.git/
+.gitignore
+
+# CI/CD
+.github/
+.circleci/
+.travis.yml
+.gitlab-ci.yml
+
+# Testing
+test/
+tests/
+__tests__/
+*.test.*
+*.spec.*
+coverage/
+.nyc_output/
+jest.config.*
+vitest.config.*
+
+# Build artifacts (keep only dist/)
+build/
+lib/
+out/
+
+# Editor and IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Documentation (if you don't want to include)
+docs/
+CONTRIBUTING.md
+CHANGELOG.md

@@ -34,6 +34,21 @@ program
                     chalk.green(`\n✅ Save config to: ${configPath}`))
                 );
     })
+    .addHelpText(
+      "after",
+      chalk.gray(`
+Examples:
+
+  # Link a Firebase Admin service account
+  $ firestoreq link path/to/service-account.json
+
+  # Link with relative path
+  $ firestoreq link ./config/firebase-admin-key.json
+
+  # Link with absolute path
+  $ firestoreq link /home/user/firebase-service-account.json
+`)
+    )
 
 program
     .command("unlink")
@@ -50,3 +65,12 @@ program
             chalk.green("✅ Unlinked service account.")
         )
     })
+    .addHelpText(
+      "after",
+      chalk.gray(`
+Examples:
+
+  # Unlink the currently linked service account
+  $ firestoreq unlink
+`)
+    )

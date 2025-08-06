@@ -161,18 +161,18 @@ program
 Examples:
 
   # Get a single document
-  $ fsq get users/abc123
+  $ firestoreq get users/abc123
 
   # Get 10 documents from 'users' collection
-  $ fsq get users -l 10
+  $ firestoreq get users -l 10
 
   # Get 5 users ordered by 'created_at' descending
-  $ fsq get users -l 5 -o created_at=desc
+  $ firestoreq get users -l 5 -o created_at=desc
 
   # Get only the 'name' and 'email' fields from a document
-  $ fsq get users/abc123 -f name email
+  $ firestoreq get users/abc123 -f name email
 
   # Save the result to a file
-  $ fsq get users -s output.json
+  $ firestoreq get users -s output.json
 `)
   );

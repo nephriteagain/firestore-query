@@ -109,4 +109,33 @@ program
       console.log(
         chalk.bgGreen("SUCCESS")
       )
-    }) 
+    })
+    .addHelpText(
+      "after",
+      chalk.gray(`
+Examples:
+
+  # Create a document with auto-generated ID
+  $ firestoreq create users -f name,John email,john@example.com
+
+  # Create a document with specific ID
+  $ firestoreq create users/abc123 -f name,John email,john@example.com
+
+  # Create with different data types
+  $ firestoreq create users/abc123 -f name,John age,25,int active,true,bool
+
+  # Create with date field (timestamp)
+  $ firestoreq create posts/xyz789 -f title,Hello created_at,1648771200000,date
+
+  # Create with current date
+  $ firestoreq create posts -f title,Hello created_at,now,date
+
+  # Create with multiple field types
+  $ firestoreq create products -f name,Widget price,19.99,float stock,100,int available,true,bool
+
+  # Create with null field
+  $ firestoreq create users -f name,John deleted_at,null,null
+
+Available field types: string, int, number, float, bool, boolean, null, date
+`)
+    )
