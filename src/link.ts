@@ -40,13 +40,13 @@ program
 Examples:
 
   # Link a Firebase Admin service account
-  $ firestoreq link path/to/service-account.json
+  $ fsq link path/to/service-account.json
 
   # Link with relative path
-  $ firestoreq link ./config/firebase-admin-key.json
+  $ fsq link ./config/firebase-admin-key.json
 
   # Link with absolute path
-  $ firestoreq link /home/user/firebase-service-account.json
+  $ fsq link /home/user/firebase-service-account.json
 `)
     )
 
@@ -71,6 +71,6 @@ program
 Examples:
 
   # Unlink the currently linked service account
-  $ firestoreq unlink
+  $ fsq unlink
 `)
     )

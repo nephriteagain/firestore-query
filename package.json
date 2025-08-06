@@ -1,10 +1,10 @@
 {
-  "name": "firestoreq",
+  "name": "@nephriteagain/firestore-query",
   "version": "0.0.1",
   "description": "A CLI tool for querying and managing Firestore collections",
   "main": "dist/index.js",
   "bin": {
-    "firestoreq": "./dist/index.js"
+    "fsq": "./dist/index.js"
   },
   "files": [
     "dist/**/*",
@@ -13,6 +13,9 @@
   ],
   "keywords": [
     "firestore",
+    "firestore query",
+    "firestore cli",
+    "firestore query cli",
     "firebase",
     "cli",
     "database",
@@ -42,11 +45,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/nephriteagain/firestoreq"
+    "url": "https://github.com/nephriteagain/firestore-query"
   },
   "bugs": {
-    "url": "https://github.com/nephriteagain/firestoreq/issues"
+    "url": "https://github.com/nephriteagain/firestore-query/issues"
   },
-  "homepage": "https://github.com/nephriteagain/firestoreq#readme",
+  "homepage": "https://github.com/nephriteagain/firestore-query#readme",
   "author": "nephriteagain"
 }

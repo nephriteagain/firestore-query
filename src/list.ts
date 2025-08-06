@@ -78,13 +78,13 @@ program
     `
 Examples:
 
-  $ firestoreq list
+  $ fsq list
     - Lists all root collections.
 
-  $ firestoreq list users/abc123
+  $ fsq list users/abc123
     - Lists subcollections inside the document 'users/abc123'.
 
-  $ firestoreq list users -s output.txt
+  $ fsq list users -s output.txt
     - Lists subcollections of the first document in 'users' and saves it to output.txt.
 `
   );

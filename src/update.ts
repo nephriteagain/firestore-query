@@ -108,22 +108,22 @@ program
 Examples:
 
   # Update a document with string fields
-  $ firestoreq update users/abc123 -f name,John email,john@example.com
+  $ fsq update users/abc123 -f name,John email,john@example.com
 
   # Update with different data types
-  $ firestoreq update users/abc123 -f age,25,int active,true,bool
+  $ fsq update users/abc123 -f age,25,int active,true,bool
 
   # Update with date field (timestamp)
-  $ firestoreq update posts/xyz789 -f created_at,1648771200000,date
+  $ fsq update posts/xyz789 -f created_at,1648771200000,date
 
   # Update with current date
-  $ firestoreq update posts/xyz789 -f updated_at,now,date
+  $ fsq update posts/xyz789 -f updated_at,now,date
 
   # Update multiple fields with different types
-  $ firestoreq update products/item1 -f price,19.99,float stock,100,int available,true,bool
+  $ fsq update products/item1 -f price,19.99,float stock,100,int available,true,bool
 
   # Set field to null
-  $ firestoreq update users/abc123 -f deleted_at,null,null
+  $ fsq update users/abc123 -f deleted_at,null,null
 
 Available field types: string, int, number, float, bool, boolean, null, date
 `)

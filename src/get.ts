@@ -80,10 +80,10 @@ program
        * where
        * 
        * @example
-       * firestoreq get users --where email=test@gmail.com
+       * fsq get users --where email=test@gmail.com
        * 
        * // multi query sample
-       * firestoreq get users --where first_name=john last_name=pork
+       * fsq get users --where first_name=john last_name=pork
        */
       if (options.where && options.where.length > 0) {
         q = handleWhereOption({ctx: program, options, query: q})
@@ -94,8 +94,8 @@ program
       /**
       * @description Order the results by a field. 
       * @example
-      * firestoreq get users --o date=desc
-      * firestoreq get users --o name
+      * fsq get users --o date=desc
+      * fsq get users --o name
       */
       if (options.orderBy) {
         q =  handleOrderByOption(q, options)
@@ -161,18 +161,18 @@ program
 Examples:
 
   # Get a single document
-  $ firestoreq get users/abc123
+  $ fsq get users/abc123
 
   # Get 10 documents from 'users' collection
-  $ firestoreq get users -l 10
+  $ fsq get users -l 10
 
   # Get 5 users ordered by 'created_at' descending
-  $ firestoreq get users -l 5 -o created_at=desc
+  $ fsq get users -l 5 -o created_at=desc
 
   # Get only the 'name' and 'email' fields from a document
-  $ firestoreq get users/abc123 -f name email
+  $ fsq get users/abc123 -f name email
 
   # Save the result to a file
-  $ firestoreq get users -s output.json
+  $ fsq get users -s output.json
 `)
   );

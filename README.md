@@ -1,30 +1,30 @@
-# FirestoreQ (firestoreq)
+# Firestore Query (@nephriteagain/firestore-query)
 
-A powerful command-line interface for querying and managing your Firestore database. FirestoreQ provides intuitive commands to perform CRUD operations, aggregations, and database management tasks directly from your terminal.
+A powerful command-line interface for querying and managing your Firestore database. Firestore Query provides intuitive commands to perform CRUD operations, aggregations, and database management tasks directly from your terminal.
 
 ## Installation
 
 ```bash
-npm install -g firestoreq
+npm install -g @nephriteagain/firestore-query
 ```
 
 ## Quick Start
 
 1. **Link your Firebase Admin Service Account:**
    ```bash
-   firestoreq link path/to/your/service-account.json
+   fsq link path/to/your/service-account.json
    ```
 
 2. **Start querying your Firestore database:**
    ```bash
    # List all root collections
-   firestoreq list
+   fsq list
 
    # Get documents from a collection
-   firestoreq get users -l 10
+   fsq get users -l 10
 
    # Create a new document
-   firestoreq create users -f name,John email,john@example.com
+   fsq create users -f name,John email,john@example.com
    ```
 
 ## Commands
@@ -33,45 +33,45 @@ npm install -g firestoreq
 Connect your Firebase Admin service account to enable database operations.
 
 ```bash
-firestoreq link <path-to-service-account.json>
+fsq link <path-to-service-account.json>
 ```
 
 **Example:**
 ```bash
-firestoreq link ./config/firebase-admin-key.json
+fsq link ./config/firebase-admin-key.json
 ```
 
 ### 🔓 `unlink` - Unlink Service Account
 Remove the linked Firebase service account.
 
 ```bash
-firestoreq unlink
+fsq unlink
 ```
 
 ### 📋 `list` - List Collections
 List Firestore collections at root level or subcollections within a document.
 
 ```bash
-firestoreq list [path]
+fsq list [path]
 ```
 
 **Examples:**
 ```bash
 # List all root collections
-firestoreq list
+fsq list
 
 # List subcollections in a document
-firestoreq list users/abc123
+fsq list users/abc123
 
 # List and save to file
-firestoreq list -s collections.txt
+fsq list -s collections.txt
 ```
 
 ### 📖 `get` - Retrieve Documents
 Fetch documents or collections with powerful filtering, ordering, and field selection.
 
 ```bash
-firestoreq get <path> [options]
+fsq get <path> [options]
 ```
 
 **Options:**
@@ -86,29 +86,29 @@ firestoreq get <path> [options]
 **Examples:**
 ```bash
 # Get a single document
-firestoreq get users/abc123
+fsq get users/abc123
 
 # Get 10 users with specific fields
-firestoreq get users -l 10 -f name email age
+fsq get users -l 10 -f name email age
 
 # Get users ordered by creation date
-firestoreq get users -l 5 -o created_at=desc
+fsq get users -l 5 -o created_at=desc
 
 # Filter users by status
-firestoreq get users -w status=active age>18
+fsq get users -w status=active age>18
 
 # Query collection group
-firestoreq get posts -c -l 100
+fsq get posts -c -l 100
 
 # Save results as JSON
-firestoreq get users -j -s users.json
+fsq get users -j -s users.json
 ```
 
 ### ➕ `create` - Create Documents
 Create new documents with specified fields and data types.
 
 ```bash
-firestoreq create <path> -f <field,value,type> [field,value,type...]
+fsq create <path> -f <field,value,type> [field,value,type...]
 ```
 
 **Supported Types:** `string`, `int`, `number`, `float`, `bool`, `boolean`, `null`, `date`
@@ -116,45 +116,45 @@ firestoreq create <path> -f <field,value,type> [field,value,type...]
 **Examples:**
 ```bash
 # Create document with auto-generated ID
-firestoreq create users -f name,John email,john@example.com
+fsq create users -f name,John email,john@example.com
 
 # Create document with specific ID
-firestoreq create users/abc123 -f name,John age,25,int active,true,bool
+fsq create users/abc123 -f name,John age,25,int active,true,bool
 
 # Create with date fields
-firestoreq create posts -f title,Hello created_at,now,date
+fsq create posts -f title,Hello created_at,now,date
 
 # Create with mixed data types
-firestoreq create products -f name,Widget price,19.99,float stock,100,int
+fsq create products -f name,Widget price,19.99,float stock,100,int
 ```
 
 ### ✏️ `update` - Update Documents
 Update existing documents with new field values.
 
 ```bash
-firestoreq update <document-path> -f <field,value,type> [field,value,type...]
+fsq update <document-path> -f <field,value,type> [field,value,type...]
 ```
 
 **Examples:**
 ```bash
 # Update string fields
-firestoreq update users/abc123 -f name,John email,john@example.com
+fsq update users/abc123 -f name,John email,john@example.com
 
 # Update with different data types
-firestoreq update users/abc123 -f age,26,int active,true,bool
+fsq update users/abc123 -f age,26,int active,true,bool
 
 # Update with timestamps
-firestoreq update posts/xyz789 -f updated_at,now,date
+fsq update posts/xyz789 -f updated_at,now,date
 
 # Set field to null
-firestoreq update users/abc123 -f deleted_at,null,null
+fsq update users/abc123 -f deleted_at,null,null
 ```
 
 ### 📊 `aggregate` - Aggregate Data
 Perform count, sum, and average aggregations on collections.
 
 ```bash
-firestoreq aggregate <collection-path> [options]
+fsq aggregate <collection-path> [options]
 ```
 
 **Options:**
@@ -170,19 +170,19 @@ firestoreq aggregate <collection-path> [options]
 **Examples:**
 ```bash
 # Count all users
-firestoreq aggregate users --count
+fsq aggregate users --count
 
 # Sum all scores in games collection
-firestoreq aggregate games --sum score
+fsq aggregate games --sum score
 
 # Get average age of active users
-firestoreq aggregate users --average age -w status=active
+fsq aggregate users --average age -w status=active
 
 # Multiple aggregations
-firestoreq aggregate orders --count --sum total --average total
+fsq aggregate orders --count --sum total --average total
 
 # Save aggregation results
-firestoreq aggregate users --count --average age -s stats.json
+fsq aggregate users --count --average age -s stats.json
 ```
 
 ## Field Types & Formatting
@@ -200,13 +200,13 @@ When creating or updating documents, specify field types using the format: `fiel
 ### Date Field Examples:
 ```bash
 # Current timestamp
-firestoreq create posts -f created_at,now,date
+fsq create posts -f created_at,now,date
 
 # Specific timestamp (milliseconds)
-firestoreq create posts -f created_at,1648771200000,date
+fsq create posts -f created_at,1648771200000,date
 
 # Date string
-firestoreq create posts -f created_at,"2024-01-15",date
+fsq create posts -f created_at,"2024-01-15",date
 ```
 
 ## Where Clause Syntax
@@ -215,16 +215,16 @@ Filter documents using Firestore's where operators:
 
 ```bash
 # Equality
-firestoreq get users -w status=active
+fsq get users -w status=active
 
 # Comparison operators
-firestoreq get users -w age>18 score<=100
+fsq get users -w age>18 score<=100
 
 # Multiple conditions
-firestoreq get users -w status=active age>18 premium=true
+fsq get users -w status=active age>18 premium=true
 
 # String comparison
-firestoreq get users -w name>=A name<B
+fsq get users -w name>=A name<B
 ```
 
 ## File Output
@@ -233,13 +233,13 @@ Save command results to files using the `-s` or `--save` option:
 
 ```bash
 # Save as JSON
-firestoreq get users -j -s users.json
+fsq get users -j -s users.json
 
 # Save formatted output
-firestoreq list -s collections.txt
+fsq list -s collections.txt
 
 # Save aggregation results
-firestoreq aggregate users --count -s user-count.json
+fsq aggregate users --count -s user-count.json
 ```
 
 ## Global Options
@@ -249,38 +249,38 @@ firestoreq aggregate users --count -s user-count.json
 
 ## Configuration
 
-FirestoreQ stores your service account configuration in your system's config directory. Use `firestoreq link` to set up authentication and `firestoreq unlink` to remove it.
+Firestore Query stores your service account configuration in your system's config directory. Use `fsq link` to set up authentication and `fsq unlink` to remove it.
 
 ## Examples Workflow
 
-Here's a typical workflow using FirestoreQ:
+Here's a typical workflow using Firestore Query:
 
 ```bash
 # 1. Link your Firebase project
-firestoreq link ./firebase-admin-key.json
+fsq link ./firebase-admin-key.json
 
 # 2. Explore your database structure
-firestoreq list
+fsq list
 
 # 3. Get some sample data
-firestoreq get users -l 5 -f name email
+fsq get users -l 5 -f name email
 
 # 4. Create a new user
-firestoreq create users -f name,"Jane Doe" email,jane@example.com age,28,int
+fsq create users -f name,"Jane Doe" email,jane@example.com age,28,int
 
 # 5. Update the user
-firestoreq update users/[generated-id] -f verified,true,bool
+fsq update users/[generated-id] -f verified,true,bool
 
 # 6. Get some statistics
-firestoreq aggregate users --count --average age
+fsq aggregate users --count --average age
 
 # 7. Clean up when done
-firestoreq unlink
+fsq unlink
 ```
 
 ## Support
 
-For issues, feature requests, or questions, please visit our [GitHub repository](https://github.com/your-repo/firestoreq).
+For issues, feature requests, or questions, please visit our [GitHub repository](https://github.com/nephriteagain/firestore-query).
 
 ## License
 

@@ -13,8 +13,8 @@ import "./create"
 
 
 program
-  .name('firestoreq')
-  .alias("fsq")
+  .name('fsq')
+  .alias("firestore-query")
   .description('Query your firestore database')
   .version('0.0.1');
 

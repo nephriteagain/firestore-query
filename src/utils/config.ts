@@ -40,7 +40,7 @@ export function bootstrapFirebase() {
   if (!config || !config.serviceAccountPath) {
     console.error(
       chalk.red(
-        "❌ No linked service account found.\nUse: firestoreq link <path to your service account>"
+        "❌ No linked service account found.\nUse: fsq link <path to your service account>"
       )
     );
     process.exit(1);

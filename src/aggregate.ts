@@ -172,21 +172,21 @@ program
 Examples:
 
   # Count documents in 'users' collection
-  $ firestoreq aggregate users --count
+  $ fsq aggregate users --count
 
   # Sum all 'score' field values in 'games' collection
-  $ firestoreq aggregate games --sum score
+  $ fsq aggregate games --sum score
 
   # Get average 'age' of users
-  $ firestoreq aggregate users --average age
+  $ fsq aggregate users --average age
 
   # Count and sum with filters
-  $ firestoreq aggregate users --count --sum score -w status=active
+  $ fsq aggregate users --count --sum score -w status=active
 
   # Aggregate collection group with limit
-  $ firestoreq aggregate posts --count -c -l 100
+  $ fsq aggregate posts --count -c -l 100
 
   # Save aggregation results to file
-  $ firestoreq aggregate users --count --average age -s results.json
+  $ fsq aggregate users --count --average age -s results.json
 `)
   );
