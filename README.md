@@ -25,6 +25,9 @@ npm install -g @nephriteagain/firestore-query
 
    # Create a new document
    fsq create users -f name,John email,john@example.com
+
+   # Delete a document
+   fsq delete users/abc123
    ```
 
 ## Commands
@@ -149,6 +152,27 @@ fsq update posts/xyz789 -f updated_at,now,date
 # Set field to null
 fsq update users/abc123 -f deleted_at,null,null
 ```
+
+### 🗑️ `delete` - Delete Documents
+Delete existing Firestore documents by their document path.
+
+```bash
+fsq delete <document-path>
+```
+
+**Examples:**
+```bash
+# Delete a user document
+fsq delete users/abc123
+
+# Delete a document in a subcollection
+fsq delete clubs/club123/events/event456
+
+# Delete a nested document
+fsq delete users/abc123/posts/post789
+```
+
+**Note:** The path must be a valid document path (collection/docId format). Collection paths are not supported.
 
 ### 📊 `aggregate` - Aggregate Data
 Perform count, sum, and average aggregations on collections.
@@ -279,10 +303,13 @@ fsq create users -f name,"Jane Doe" email,jane@example.com age,28,int
 # 5. Update the user
 fsq update users/[generated-id] -f verified,true,bool
 
-# 6. Get some statistics
+# 6. Delete a document if needed
+fsq delete users/[generated-id]
+
+# 7. Get some statistics
 fsq aggregate users --count --average age
 
-# 7. Clean up when done
+# 8. Clean up when done
 fsq unlink
 ```
 
