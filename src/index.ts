@@ -10,12 +10,13 @@ import "./aggregate"
 import "./update"
 import "./link"
 import "./create"
+import "./delete"
 
 
 program
   .name('fsq')
   .alias("firestore-query")
   .description('Query your firestore database')
-  .version('0.0.1');
+  .version('0.0.4');
 
 program.parse(process.argv);
