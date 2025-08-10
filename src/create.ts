@@ -1,12 +1,13 @@
 import chalk from "chalk";
+import { Command } from "commander";
 import program from "./program";
 import { pathResolver } from "./utils/pathResolver";
 import { bootstrapFirebase } from "./utils/config";
 import { firestore } from "firebase-admin";
 import { FIELD_TYPES } from "./constants";
 
-program
-    .command("create")
+export const create = new Command()
+    .name("create")
     .description("create a firestore document")
     .argument("path", "document path")
     .hook("preAction", () => {

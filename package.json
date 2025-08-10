@@ -1,6 +1,6 @@
 {
   "name": "@nephriteagain/firestore-query",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "A CLI tool for querying and managing Firestore collections",
   "main": "dist/index.js",
   "bin": {
@@ -25,8 +25,8 @@
   "license": "MIT",
   "type": "commonjs",
   "scripts": {
-    "build": "tsc",
-    "dev": "tsc --watch",
+    "build": "esbuild src/index.ts --bundle --platform=node --outfile=dist/index.js --target=node20 --external:firebase-admin",
+    "dev": "esbuild src/index.ts --bundle --platform=node --outfile=dist/index.js --target=node20 --watch --external:firebase-admin",
     "prepublishOnly": "npm run build"
   },
   "engines": {
@@ -34,13 +34,13 @@
   },
   "dependencies": {
     "chalk": "4",
-    "cheerio": "^1.1.2",
     "commander": "^14.0.0",
     "firebase-admin": "^13.4.0"
   },
   "devDependencies": {
     "@types/node": "^24.1.0",
     "concurrently": "^9.2.0",
+    "esbuild": "^0.25.8",
     "typescript": "^5.0.0"
   },
   "repository": {

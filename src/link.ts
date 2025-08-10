@@ -1,11 +1,12 @@
 import chalk from "chalk";
+import { Command } from "commander";
 import program from "./program"
 import { saveConfig, deleteConfig } from "./utils/config";
 import fs from "fs"
 import path from "path"
 
-program
-    .command("link")
+export const link = new Command()
+    .name("link")
     .description("link your admin service account")
     .argument("path", "path to your admin service account")
     .action((inputPath) => {

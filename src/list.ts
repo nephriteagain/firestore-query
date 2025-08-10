@@ -1,4 +1,5 @@
 import program from "./program";
+import { Command } from "commander";
 import { pathResolver } from "./utils/pathResolver";
 import { addSaveToFileOption, saveFile } from "./utils/addSaveToFileOption";
 import chalk from "chalk";
@@ -11,8 +12,8 @@ const log = (text: string) => {
   logs.push(text);
 };
 
-program
-  .command("list")
+export const list = new Command()
+  .name("list")
   .description("list firestore collection")
   .argument("[path]", "optional document path for nested collection")
   .addOption(addSaveToFileOption())

@@ -1,9 +1,10 @@
-import program from "./program";
+import { program } from "commander";
+import { Command } from "commander";
 import chalk from "chalk";
 import { pathResolver } from "./utils/pathResolver";
 import { addSaveToFileOption, saveFile } from "./utils/addSaveToFileOption";
 import { handleCollectionGroupOption, handleCollectionOption, handleLimitOption, handleOrderByOption, handleSelectFieldsCol, handleSelectFieldsDoc, handleWhereOption } from "./utils";
-import admin from "firebase-admin"
+import { firestore } from "firebase-admin"
 import { bootstrapFirebase } from "./utils/config";
 
 
@@ -12,12 +13,12 @@ const log = (text: any) => {
 };
 const logs: string[] = [];
 
-const sum = admin.firestore.AggregateField.sum
-const average = admin.firestore.AggregateField.average
-const count =  admin.firestore.AggregateField.count
+const sum = firestore.AggregateField.sum
+const average = firestore.AggregateField.average
+const count =  firestore.AggregateField.count
 
-program
-  .command("aggregate")
+export const aggregate  =new Command()
+  .name("aggregate")
   .description("aggregate count, sum, and average collection or collection group")
   .argument(
     "<path>", 
@@ -107,9 +108,9 @@ program
     }
 
     const aggregationOption :  {
-      count?: admin.firestore.AggregateField<number>;
-      sum?: admin.firestore.AggregateField<number>;
-      average?: admin.firestore.AggregateField<number | null>;
+      count?: firestore.AggregateField<number>;
+      sum?: firestore.AggregateField<number>;
+      average?: firestore.AggregateField<number | null>;
   } = {
       "count": count(),
       "sum": sum(options.sum),

@@ -1,3 +1,4 @@
+import { Command } from "commander";
 import program from "./program";
 import chalk from "chalk";
 import { pathResolver } from "./utils/pathResolver";
@@ -21,8 +22,8 @@ const log = (text: any) => {
 };
 const logs: string[] = [];
 
-program
-  .command("get")
+export const get = new Command()
+  .name("get")
   .description("get firebase document or collection data")
   .argument(
     "<path>", 

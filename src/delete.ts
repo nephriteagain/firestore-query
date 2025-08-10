@@ -1,11 +1,12 @@
 import chalk from "chalk";
+import { Command } from "commander";
 import program from "./program";
 import { pathResolver } from "./utils/pathResolver";
 import { bootstrapFirebase } from "./utils/config";
 import { firestore } from "firebase-admin";
 
-program
-    .command("delete")
+export const deleteCmd = new Command()
+    .name("delete")
     .description("delete a firestore document")
     .argument("path", "document path")
     .hook("preAction", () => {
