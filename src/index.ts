@@ -17,7 +17,7 @@ program
   .name('fsq')
   .alias("firestore-query")
   .description('Query your firestore database')
-  .version('0.0.5');
+  .version('0.0.6');
 
 program.addCommand(get)
 program.addCommand(list)

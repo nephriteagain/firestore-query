@@ -80,7 +80,7 @@ export function handleWhereOption({ctx, options, query}:{
           // todo store geopoint in firebase
           
 
-          whereQuery = query.where(field, operation as WhereFilterOp, parsedValue)
+          whereQuery = whereQuery.where(field, operation as WhereFilterOp, parsedValue)
           console.log(
             chalk.gray("where"),
             chalk.green(field),
